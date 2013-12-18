@@ -1,0 +1,3 @@
+[submodule "third_party/parson"]
+	path = third_party/parson
+	url = https://github.com/kgabis/parson.git
