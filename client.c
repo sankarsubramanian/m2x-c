@@ -1,35 +1,10 @@
 #include <curl/curl.h>
-#include <errno.h>
-#include <stdlib.h>
 #include <string.h>
 
+#include "m2x.h"
 #include "client.h"
 
 static const char *M2X_HOST = "http://api-m2x.att.com/v1";
-
-m2x_context *m2x_open(const char* key)
-{
-  m2x_context *ctx;
-  char* str;
-
-  ctx = (m2x_context *) m2x_malloc(NULL, sizeof(m2x_context));
-  ctx->curl = curl_easy_init();
-  ctx->headers = curl_slist_append(ctx->headers, "User-Agent: M2X/0.0.1 (C libcurl)");
-  ctx->headers = curl_slist_append(ctx->headers, "Content-Type: application/json");
-  str = (char *) m2x_malloc(ctx, (12 + strlen(key)) * sizeof(char));
-  strcpy(str, "X-M2X-KEY: ");
-  strcpy(str + 11, key);
-  ctx->headers = curl_slist_append(ctx->headers, str);
-  m2x_free(str);
-  return ctx;
-}
-
-void m2x_close(m2x_context *ctx)
-{
-  curl_slist_free_all(ctx->headers);
-  curl_easy_cleanup(ctx->curl);
-  m2x_free(ctx);
-}
 
 char *create_url(m2x_context *ctx, const char *path)
 {
@@ -48,7 +23,7 @@ typedef struct curl_write_context {
   m2x_context *m2x_ctx;
   int length;
   int index;
-  void* p;
+  char* p;
 } curl_write_context;
 
 static curl_write_context *create_write_context(m2x_context *ctx)
@@ -100,7 +75,7 @@ write_callback(char *ptr, size_t size, size_t nmemb, void *userdata)
 
   strncpy(ctx->p + ctx->index, ptr, size * nmemb);
   ctx->index += size * nmemb;
-  ctx->index = '\0';
+  ctx->p[ctx->index] = '\0';
   return (size * nmemb);
 }
 
@@ -224,27 +199,4 @@ int m2x_client_delete(m2x_context *ctx, const char *path, const char *data)
             curl_easy_strerror(res));
   }
   return res;
-}
-
-void *m2x_malloc(m2x_context *ctx, size_t len)
-{
-  return m2x_realloc(ctx, NULL, len);
-}
-
-void *m2x_realloc(m2x_context *ctx, void *p, size_t len)
-{
-  void *p2;
-
-  p2 = realloc(p, len);
-  if (!p2) {
-    /* Not enough memory */
-    m2x_close(ctx);
-    exit(ENOMEM);
-  }
-  return p2;
-}
-
-void m2x_free(void *p)
-{
-  free(p);
 }
