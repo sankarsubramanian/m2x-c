@@ -104,6 +104,51 @@ int m2x_feed_stream_values(m2x_context *ctx, const char *feed_id,
   return m2x_feed_get2(ctx, feed_id, stream_name, "/values", out);
 }
 
+int m2x_feed_update_location(m2x_context *ctx, const char *feed_id,
+                             const char *data)
+{
+  int ret, len;
+  char *path;
+
+  len = 7 + strlen(feed_id) + 9 + 1;
+  path = (char *) m2x_malloc(ctx, len);
+  snprintf(path, len, "/feeds/%s/location", path);
+
+  ret = m2x_client_put(ctx, path, data, NULL);
+  m2x_free(path);
+  return ret;
+}
+
+int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
+                           const char *stream_name, const char *data)
+{
+  int ret, len;
+  char *path;
+
+  len = 7 + strlen(feed_id) + 9 + strlen(stream_name) + 1;
+  path = (char *) m2x_malloc(ctx, len);
+  snprintf(path, len, "/feeds/%s/streams/%s", feed_id, stream_name);
+
+  ret = m2x_client_put(ctx, path, data, NULL);
+  m2x_free(path);
+  return ret;
+}
+
+int m2x_feed_delete_stream(m2x_context *ctx, const char *feed_id,
+                           const char *stream_name)
+{
+  int ret, len;
+  char *path;
+
+  len = 7 + strlen(feed_id) + 9 + strlen(stream_name) + 1;
+  path = (char *) m2x_malloc(ctx, len);
+  snprintf(path, len, "/feeds/%s/streams/%s", feed_id, stream_name);
+
+  ret = m2x_client_delete(ctx, path, NULL);
+  m2x_free(path);
+  return ret;
+}
+
 int m2x_json_feed_list(m2x_context *ctx, const char *query, JSON_Value **out)
 {
   int ret;

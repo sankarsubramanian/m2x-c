@@ -50,5 +50,7 @@ void *m2x_realloc(m2x_context *ctx, void *p, size_t len)
 
 void m2x_free(void *p)
 {
-  free(p);
+  if (p) {
+    free(p);
+  }
 }
