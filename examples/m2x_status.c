@@ -3,7 +3,7 @@
 #include "m2x.h"
 #include "client.h"
 
-const char *M2X_KEY="b3e742805ac8576d0df925b4dfe4d401";
+const char *M2X_KEY="";
 
 int main()
 {
