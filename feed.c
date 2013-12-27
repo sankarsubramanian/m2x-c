@@ -123,7 +123,7 @@ int m2x_feed_update_location(m2x_context *ctx, const char *feed_id,
 
   len = 7 + strlen(feed_id) + 9 + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/feeds/%s/location", path);
+  snprintf(path, len, "/feeds/%s/location", feed_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
