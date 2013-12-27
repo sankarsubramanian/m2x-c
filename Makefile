@@ -4,10 +4,13 @@ CFLAGS=-O0 -g -Wall -Wextra -std=c89
 LDFLAGS=-lcurl
 M2X_LIB=m2x.a
 
-$(M2X_LIB): feed.o m2x.o client.o parson.o
+$(M2X_LIB): feed.o blueprint.o m2x.o client.o parson.o
 	$(AR) -rcs $@ $^
 
 feed.o: feed.c m2x.h client.h feed.h third_party/parson/parson.h
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+blueprint.o: blueprint.c m2x.h client.h blueprint.h third_party/parson/parson.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 m2x.o: m2x.c m2x.h
