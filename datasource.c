@@ -84,3 +84,17 @@ int m2x_json_datasource_view(m2x_context *ctx, const char *datasource_id,
   }
   return ret;
 }
+
+int m2x_json_datasource_create(m2x_context *ctx, const char *data,
+                               JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_datasource_create(ctx, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}

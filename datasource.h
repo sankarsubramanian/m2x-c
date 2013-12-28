@@ -20,6 +20,9 @@ int m2x_json_datasource_list(m2x_context *ctx, JSON_Value **out);
 int m2x_json_datasource_view(m2x_context *ctx, const char *datasource_id,
                              JSON_Value **out);
 
+int m2x_json_datasource_create(m2x_context *ctx, const char *data,
+                               JSON_Value **out);
+
 #if defined(__cplusplus)
 }  /* extern "C" { */
 #endif

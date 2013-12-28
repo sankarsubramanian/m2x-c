@@ -126,3 +126,31 @@ int m2x_json_batch_list_datasources(m2x_context *ctx, const char *batch_id,
   }
   return ret;
 }
+
+int m2x_json_batch_create(m2x_context *ctx, const char *data,
+                          JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_batch_create(ctx, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_batch_add_datasource(m2x_context *ctx, const char *batch_id,
+                                  const char *data, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_batch_add_datasource(ctx, batch_id, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}

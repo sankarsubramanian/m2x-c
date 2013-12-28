@@ -19,6 +19,9 @@ int m2x_json_blueprint_list(m2x_context *ctx, JSON_Value **out);
 int m2x_json_blueprint_view(m2x_context *ctx, const char *blueprint_id,
                             JSON_Value **out);
 
+int m2x_json_blueprint_create(m2x_context *ctx, const char *data,
+                              JSON_Value **out);
+
 #if defined(__cplusplus)
 }  /* extern "C" { */
 #endif

@@ -83,3 +83,17 @@ int m2x_json_blueprint_view(m2x_context *ctx, const char *blueprint_id,
   }
   return ret;
 }
+
+int m2x_json_blueprint_create(m2x_context *ctx, const char *data,
+                              JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_blueprint_create(ctx, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
