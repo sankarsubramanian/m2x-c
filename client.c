@@ -141,7 +141,7 @@ int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
   } else {
     m2x_free(write_ctx->p);
   }
-  release_write_context(write_ctx, 1);
+  release_write_context(write_ctx, 0);
   return res;
 }
 
@@ -176,7 +176,7 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
   } else {
     m2x_free(write_ctx->p);
   }
-  release_write_context(write_ctx, 1);
+  release_write_context(write_ctx, 0);
   return res;
 }
 
