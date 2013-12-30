@@ -12,12 +12,10 @@ int m2x_blueprint_list(m2x_context *ctx, char **out)
 
 int m2x_blueprint_view(m2x_context *ctx, const char *blueprint_id, char **out)
 {
-  int ret, len;
+  int ret;
   char *path;
 
-  len = m2x_internal_encoded_sprintf(NULL, "/blueprints/%s", blueprint_id) + 1;
-  path = (char *) m2x_malloc(ctx, len);
-  m2x_internal_encoded_sprintf(path, "/blueprints/%s", blueprint_id);
+  path = m2x_internal_create_format_string(ctx, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -32,12 +30,10 @@ int m2x_blueprint_create(m2x_context *ctx, const char *data, char **out)
 int m2x_blueprint_update(m2x_context *ctx, const char *blueprint_id,
                          const char *data)
 {
-  int ret, len;
+  int ret;
   char *path;
 
-  len = m2x_internal_encoded_sprintf(NULL, "/blueprints/%s", blueprint_id) + 1;
-  path = (char *) m2x_malloc(ctx, len);
-  m2x_internal_encoded_sprintf(path, "/blueprints/%s", blueprint_id);
+  path = m2x_internal_create_format_string(ctx, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -46,12 +42,10 @@ int m2x_blueprint_update(m2x_context *ctx, const char *blueprint_id,
 
 int m2x_blueprint_delete(m2x_context *ctx, const char *blueprint_id)
 {
-  int ret, len;
+  int ret;
   char *path;
 
-  len = m2x_internal_encoded_sprintf(NULL, "/blueprints/%s", blueprint_id) + 1;
-  path = (char *) m2x_malloc(ctx, len);
-  m2x_internal_encoded_sprintf(path, "/blueprints/%s", blueprint_id);
+  path = m2x_internal_create_format_string(ctx, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

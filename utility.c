@@ -1,8 +1,8 @@
 #include <ctype.h>
-#include <stdarg.h>
 #include <string.h>
 
 #include "m2x.h"
+#include "utility.h"
 
 size_t m2x_internal_encode_string(char *dst, const char *src)
 {
@@ -47,14 +47,32 @@ char *m2x_internal_get_encoded_string(m2x_context *ctx, const char *str)
 
 int m2x_internal_encoded_sprintf(char *dst, const char *fmt, ...)
 {
-  int i, len;
   va_list vl;
 
-  i = len = 0;
   va_start(vl, fmt);
+  return m2x_internal_encoded_vsprintf(dst, fmt, vl);
+  va_end(vl);
+}
+
+int m2x_internal_encoded_vsprintf(char *dst, const char *fmt, va_list vl)
+{
+  const char *str;
+  int i, len;
+
+  i = len = 0;
   while (fmt[i] != '\0') {
     if ((fmt[i] == '%') && (fmt[i + 1] == 's')) {
-      len += m2x_internal_encode_string(dst + len, va_arg(vl, const char *));
+      str = va_arg(vl, const char *);
+      if (dst) {
+        len += m2x_internal_encode_string(dst + len, str);
+      } else {
+        len += m2x_internal_encode_string(NULL, str);
+      }
+      i += 2;
+    } else if ((fmt[i] == '%') && (fmt[i + 1] == 'S')) {
+      str = va_arg(vl, const char *);
+      if (dst) { strcpy(dst + len, str); }
+      len += strlen(str);
       i += 2;
     } else {
       if (dst) {
@@ -65,6 +83,23 @@ int m2x_internal_encoded_sprintf(char *dst, const char *fmt, ...)
       i++;
     }
   }
-  va_end(vl);
   return len;
+}
+
+char *m2x_internal_create_format_string(m2x_context *ctx, const char *fmt, ...)
+{
+  char *ret;
+  int len;
+  va_list vl;
+
+  va_start(vl, fmt);
+  len = m2x_internal_encoded_vsprintf(NULL, fmt, vl) + 1;
+  va_end(vl);
+
+  ret = (char *) m2x_malloc(ctx, len);
+  va_start(vl, fmt);
+  m2x_internal_encoded_vsprintf(ret, fmt, vl);
+  va_end(vl);
+
+  return ret;
 }
