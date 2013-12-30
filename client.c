@@ -180,23 +180,34 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
   return res;
 }
 
-int m2x_client_delete(m2x_context *ctx, const char *path, const char *data)
+int m2x_client_delete(m2x_context *ctx, const char *path, char **out)
 {
+  curl_write_context *write_ctx;
   char *url;
   CURLcode res;
 
+  write_ctx = create_write_context(ctx);
   url = create_url(ctx, path);
   curl_easy_reset(ctx->curl);
   curl_easy_setopt(ctx->curl, CURLOPT_URL, url);
   m2x_free(url);
   curl_easy_setopt(ctx->curl, CURLOPT_HTTPHEADER, ctx->headers);
   curl_easy_setopt(ctx->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
-  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS, data);
+  curl_easy_setopt(ctx->curl, CURLOPT_WRITEDATA, write_ctx);
+  curl_easy_setopt(ctx->curl, CURLOPT_WRITEFUNCTION, write_callback);
   res = curl_easy_perform(ctx->curl);
 
   if (res != CURLE_OK) {
     fprintf(stderr, "DELETE failed: %s\n",
             curl_easy_strerror(res));
+    release_write_context(write_ctx, 1);
   }
+
+  if (out != NULL) {
+    *out = write_ctx->p;
+  } else {
+    m2x_free(write_ctx->p);
+  }
+  release_write_context(write_ctx, 0);
   return res;
 }

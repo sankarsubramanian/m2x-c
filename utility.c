@@ -103,3 +103,29 @@ char *m2x_internal_create_format_string(m2x_context *ctx, const char *fmt, ...)
 
   return ret;
 }
+
+char *m2x_internal_create_query_path(m2x_context *ctx,
+                                     const char *base_path,
+                                     const char *query)
+{
+  char *ret;
+  int base_len, query_len, needs_question, len, index;
+
+  base_len = strlen(base_path);
+  query_len = query ? strlen(query) : 0;
+  needs_question = (query_len > 0) ? (query[0] != '?') : 0;
+  len = base_len + query_len + 1;
+  if (needs_question) { len++; }
+
+  ret = (char *) m2x_malloc(ctx, len);
+  strcpy(ret, base_path);
+  index = base_len;
+  if (needs_question) { ret[index++] = '?'; }
+  if (query_len > 0) {
+    strcpy(ret + index, query);
+    index += query_len;
+  }
+  ret[index] = '\0';
+
+  return ret;
+}
