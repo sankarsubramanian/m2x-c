@@ -3,6 +3,7 @@
 #include "m2x.h"
 #include "client.h"
 #include "batch.h"
+#include "utility.h"
 
 int m2x_batch_list(m2x_context *ctx, char **out)
 {
@@ -14,9 +15,9 @@ int m2x_batch_view(m2x_context *ctx, const char *batch_id, char **out)
   int ret, len;
   char *path;
 
-  len = 9 + strlen(batch_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/batches/%s", batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/batches/%s", batch_id);
+  m2x_internal_encoded_sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -29,9 +30,9 @@ int m2x_batch_list_datasources(m2x_context *ctx, const char *batch_id,
   int ret, len;
   char *path;
 
-  len = 9 + strlen(batch_id) + 12 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/batches/%s/datasources", batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/batches/%s/datasources", batch_id);
+  m2x_internal_encoded_sprintf(path, "/batches/%s/datasources", batch_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -48,9 +49,9 @@ int m2x_batch_update(m2x_context *ctx, const char *batch_id, const char *data)
   int ret, len;
   char *path;
 
-  len = 9 + strlen(batch_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/batches/%s", batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/batches/%s", batch_id);
+  m2x_internal_encoded_sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -63,9 +64,9 @@ int m2x_batch_add_datasource(m2x_context *ctx, const char *batch_id,
   int ret, len;
   char *path;
 
-  len = 9 + strlen(batch_id) + 12 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/batches/%s/datasources", batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/batches/%s/datasources", batch_id);
+  m2x_internal_encoded_sprintf(path, "/batches/%s/datasources", batch_id);
 
   ret = m2x_client_post(ctx, path, data, out);
   m2x_free(path);
@@ -77,9 +78,9 @@ int m2x_batch_delete(m2x_context *ctx, const char *batch_id)
   int ret, len;
   char *path;
 
-  len = 9 + strlen(batch_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/batches/%s", batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/batches/%s", batch_id);
+  m2x_internal_encoded_sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

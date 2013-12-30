@@ -3,6 +3,7 @@
 #include "m2x.h"
 #include "client.h"
 #include "key.h"
+#include "utility.h"
 
 int m2x_key_list(m2x_context *ctx, const char *optional_feed_id, char **out)
 {
@@ -29,9 +30,9 @@ int m2x_key_view(m2x_context *ctx, const char *key, char **out)
   int ret, len;
   char *path;
 
-  len = 6 + strlen(key) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/keys/%s", key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/keys/%s", key);
+  m2x_internal_encoded_sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -48,9 +49,9 @@ int m2x_key_update(m2x_context *ctx, const char *key, const char *data)
   int ret, len;
   char *path;
 
-  len = 6 + strlen(key) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/keys/%s", key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/keys/%s", key);
+  m2x_internal_encoded_sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -62,9 +63,9 @@ int m2x_key_regenerate(m2x_context *ctx, const char *key, char **out)
   int ret, len;
   char *path;
 
-  len = 6 + strlen(key) + 11 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/keys/%s/regenerate", key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/keys/%s/regenerate", key);
+  m2x_internal_encoded_sprintf(path, "/keys/%s/regenerate", key);
 
   ret = m2x_client_post(ctx, path, NULL, out);
   m2x_free(path);
@@ -76,9 +77,9 @@ int m2x_key_delete(m2x_context *ctx, const char *key)
   int ret, len;
   char *path;
 
-  len = 6 + strlen(key) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/keys/%s", key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/keys/%s", key);
+  m2x_internal_encoded_sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

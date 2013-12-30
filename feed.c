@@ -3,6 +3,7 @@
 #include "m2x.h"
 #include "client.h"
 #include "feed.h"
+#include "utility.h"
 
 int m2x_feed_list(m2x_context *ctx, const char *query, char **out)
 {
@@ -31,14 +32,11 @@ static int m2x_feed_get1(m2x_context *ctx, const char *feed_id,
   int ret, len, index;
   char *path;
 
-  len = 7 + strlen(feed_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s", feed_id) + 1;
   if (suffix) { len += strlen(suffix); }
 
   path = (char *) m2x_malloc(ctx, len);
-  strcpy(path, "/feeds/");
-  index = 7;
-  strcpy(path + index, feed_id);
-  index += strlen(feed_id);
+  index = m2x_internal_encoded_sprintf(path, "/feeds/%s", feed_id);
   if (suffix) { strcpy(path + index, suffix); }
 
   ret = m2x_client_get(ctx, path, out);
@@ -53,18 +51,13 @@ static int m2x_feed_get2(m2x_context *ctx, const char *feed_id,
   int ret, len, index;
   char *path;
 
-  len = 7 + strlen(feed_id) + strlen(midix) + strlen(item) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/%s/%s",
+                                     feed_id, midix, item) + 1;
   if (suffix) { len += strlen(suffix); }
 
   path = (char *) m2x_malloc(ctx, len);
-  strcpy(path, "/feeds/");
-  index = 7;
-  strcpy(path + index, feed_id);
-  index += strlen(feed_id);
-  strcpy(path + index, midix);
-  index += strlen(midix);
-  strcpy(path + index , item);
-  index += strlen(item);
+  index = m2x_internal_encoded_sprintf(path, "/feeds/%s/%s/%s",
+                                       feed_id, midix, item);
   if (suffix) { strcpy(path + index, suffix); }
 
   ret = m2x_client_get(ctx, path, out);
@@ -95,13 +88,13 @@ int m2x_feed_streams(m2x_context *ctx, const char *feed_id, char **out)
 int m2x_feed_stream(m2x_context *ctx, const char *feed_id,
                     const char *stream_name, char **out)
 {
-  return m2x_feed_get2(ctx, feed_id, "/streams/", stream_name, NULL, out);
+  return m2x_feed_get2(ctx, feed_id, "streams", stream_name, NULL, out);
 }
 
 int m2x_feed_stream_values(m2x_context *ctx, const char *feed_id,
                            const char *stream_name, char **out)
 {
-  return m2x_feed_get2(ctx, feed_id, "/streams/", stream_name, "/values", out);
+  return m2x_feed_get2(ctx, feed_id, "streams", stream_name, "/values", out);
 }
 
 int m2x_feed_triggers(m2x_context *ctx, const char *feed_id, char **out)
@@ -112,7 +105,7 @@ int m2x_feed_triggers(m2x_context *ctx, const char *feed_id, char **out)
 int m2x_feed_trigger(m2x_context *ctx, const char *feed_id,
                      const char *trigger_id, char **out)
 {
-  return m2x_feed_get2(ctx, feed_id, "/triggers/", trigger_id, NULL, out);
+  return m2x_feed_get2(ctx, feed_id, "triggers", trigger_id, NULL, out);
 }
 
 int m2x_feed_update_location(m2x_context *ctx, const char *feed_id,
@@ -121,9 +114,9 @@ int m2x_feed_update_location(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 9 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/location", feed_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/location", feed_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/location", feed_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -136,9 +129,11 @@ int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 9 + strlen(stream_name) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/streams/%s",
+                                     feed_id, stream_name) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/streams/%s", feed_id, stream_name);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/streams/%s",
+                               feed_id, stream_name);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -151,9 +146,11 @@ int m2x_feed_delete_stream(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 9 + strlen(stream_name) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/streams/%s",
+                                     feed_id, stream_name) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/streams/%s", feed_id, stream_name);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/streams/%s",
+                               feed_id, stream_name);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);
@@ -166,9 +163,9 @@ int m2x_feed_post_multiple(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s", feed_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s", feed_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s", feed_id);
 
   ret = m2x_client_post(ctx, path, data, NULL);
   m2x_free(path);
@@ -181,9 +178,9 @@ int m2x_feed_create_trigger(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 9 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/triggers", feed_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/triggers", feed_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/triggers", feed_id);
 
   ret = m2x_client_post(ctx, path, data, NULL);
   m2x_free(path);
@@ -196,9 +193,9 @@ int m2x_feed_update_trigger(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 10 + strlen(trigger_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/triggers/%s", feed_id, trigger_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/triggers/%s", feed_id, trigger_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/triggers/%s", feed_id, trigger_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -211,9 +208,9 @@ int m2x_feed_test_trigger(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 10 + strlen(trigger_id) + 5 + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/triggers/%s/test", feed_id, trigger_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/triggers/%s/test", feed_id, trigger_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/triggers/%s/test", feed_id, trigger_id);
 
   ret = m2x_client_post(ctx, path, NULL, NULL);
   m2x_free(path);
@@ -226,9 +223,9 @@ int m2x_feed_delete_trigger(m2x_context *ctx, const char *feed_id,
   int ret, len;
   char *path;
 
-  len = 7 + strlen(feed_id) + 10 + strlen(trigger_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/feeds/%s/triggers/%s", feed_id, trigger_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/feeds/%s/triggers/%s", feed_id, trigger_id);
+  m2x_internal_encoded_sprintf(path, "/feeds/%s/triggers/%s", feed_id, trigger_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

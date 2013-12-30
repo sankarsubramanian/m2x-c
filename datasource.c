@@ -3,6 +3,7 @@
 #include "m2x.h"
 #include "client.h"
 #include "datasource.h"
+#include "utility.h"
 
 int m2x_datasource_list(m2x_context *ctx, char **out)
 {
@@ -15,9 +16,9 @@ int m2x_datasource_view(m2x_context *ctx, const char *datasource_id,
   int ret, len;
   char *path;
 
-  len = 13 + strlen(datasource_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/datasources/%s", datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/datasources/%s", datasource_id);
+  m2x_internal_encoded_sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -35,9 +36,9 @@ int m2x_datasource_update(m2x_context *ctx, const char *datasource_id,
   int ret, len;
   char *path;
 
-  len = 13 + strlen(datasource_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/datasources/%s", datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/datasources/%s", datasource_id);
+  m2x_internal_encoded_sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -49,9 +50,9 @@ int m2x_datasource_delete(m2x_context *ctx, const char *datasource_id)
   int ret, len;
   char *path;
 
-  len = 13 + strlen(datasource_id) + 1;
+  len = m2x_internal_encoded_sprintf(NULL, "/datasources/%s", datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  sprintf(path, "/datasources/%s", datasource_id);
+  m2x_internal_encoded_sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);
