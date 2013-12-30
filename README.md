@@ -1,7 +1,7 @@
 C M2X API Client
 =========================
 
-The AT&T M2X API provides all the needed operations and methods to connect your devices to AT&T's M2X service. This client provides an easy to use interface for your favorite language, C.
+The [AT&T M2X](https://m2x.att.com/) API provides all the needed operations and methods to connect your devices to AT&T's M2X service. This client provides an easy to use interface for your favorite language, [C](http://www.open-std.org/jtc1/sc22/wg14/).
 
 
 Getting Started
