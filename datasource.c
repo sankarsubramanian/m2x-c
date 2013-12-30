@@ -17,7 +17,7 @@ int m2x_datasource_view(m2x_context *ctx, const char *datasource_id,
 
   len = 13 + strlen(datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/datasources/%s", datasource_id);
+  sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -37,7 +37,7 @@ int m2x_datasource_update(m2x_context *ctx, const char *datasource_id,
 
   len = 13 + strlen(datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/datasources/%s", datasource_id);
+  sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -51,7 +51,7 @@ int m2x_datasource_delete(m2x_context *ctx, const char *datasource_id)
 
   len = 13 + strlen(datasource_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/datasources/%s", datasource_id);
+  sprintf(path, "/datasources/%s", datasource_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

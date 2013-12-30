@@ -16,7 +16,7 @@ int m2x_batch_view(m2x_context *ctx, const char *batch_id, char **out)
 
   len = 9 + strlen(batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/batches/%s", batch_id);
+  sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -31,7 +31,7 @@ int m2x_batch_list_datasources(m2x_context *ctx, const char *batch_id,
 
   len = 9 + strlen(batch_id) + 12 + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/batches/%s/datasources", batch_id);
+  sprintf(path, "/batches/%s/datasources", batch_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -50,7 +50,7 @@ int m2x_batch_update(m2x_context *ctx, const char *batch_id, const char *data)
 
   len = 9 + strlen(batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/batches/%s", batch_id);
+  sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -65,7 +65,7 @@ int m2x_batch_add_datasource(m2x_context *ctx, const char *batch_id,
 
   len = 9 + strlen(batch_id) + 12 + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/batches/%s/datasources", batch_id);
+  sprintf(path, "/batches/%s/datasources", batch_id);
 
   ret = m2x_client_post(ctx, path, data, out);
   m2x_free(path);
@@ -79,7 +79,7 @@ int m2x_batch_delete(m2x_context *ctx, const char *batch_id)
 
   len = 9 + strlen(batch_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/batches/%s", batch_id);
+  sprintf(path, "/batches/%s", batch_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

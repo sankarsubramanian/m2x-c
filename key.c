@@ -31,7 +31,7 @@ int m2x_key_view(m2x_context *ctx, const char *key, char **out)
 
   len = 6 + strlen(key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/keys/%s", key);
+  sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -50,7 +50,7 @@ int m2x_key_update(m2x_context *ctx, const char *key, const char *data)
 
   len = 6 + strlen(key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/keys/%s", key);
+  sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -64,7 +64,7 @@ int m2x_key_regenerate(m2x_context *ctx, const char *key, char **out)
 
   len = 6 + strlen(key) + 11 + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/keys/%s/regenerate", key);
+  sprintf(path, "/keys/%s/regenerate", key);
 
   ret = m2x_client_post(ctx, path, NULL, out);
   m2x_free(path);
@@ -78,7 +78,7 @@ int m2x_key_delete(m2x_context *ctx, const char *key)
 
   len = 6 + strlen(key) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/keys/%s", key);
+  sprintf(path, "/keys/%s", key);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);

@@ -16,7 +16,7 @@ int m2x_blueprint_view(m2x_context *ctx, const char *blueprint_id, char **out)
 
   len = 12 + strlen(blueprint_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/blueprints/%s", blueprint_id);
+  sprintf(path, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_get(ctx, path, out);
   m2x_free(path);
@@ -36,7 +36,7 @@ int m2x_blueprint_update(m2x_context *ctx, const char *blueprint_id,
 
   len = 12 + strlen(blueprint_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/blueprints/%s", blueprint_id);
+  sprintf(path, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_put(ctx, path, data, NULL);
   m2x_free(path);
@@ -50,7 +50,7 @@ int m2x_blueprint_delete(m2x_context *ctx, const char *blueprint_id)
 
   len = 12 + strlen(blueprint_id) + 1;
   path = (char *) m2x_malloc(ctx, len);
-  snprintf(path, len, "/blueprints/%s", blueprint_id);
+  sprintf(path, "/blueprints/%s", blueprint_id);
 
   ret = m2x_client_delete(ctx, path, NULL);
   m2x_free(path);
