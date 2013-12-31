@@ -92,9 +92,20 @@ int m2x_feed_stream(m2x_context *ctx, const char *feed_id,
 }
 
 int m2x_feed_stream_values(m2x_context *ctx, const char *feed_id,
-                           const char *stream_name, char **out)
+                           const char *stream_name, const char *query,
+                           char **out)
 {
-  return m2x_feed_get2(ctx, feed_id, "streams", stream_name, "/values", out);
+  int ret;
+  char *base_path, *path;
+
+  base_path = m2x_internal_create_format_string(ctx, "/feeds/%s/streams/%s/values",
+                                                feed_id, stream_name);
+  path = m2x_internal_create_query_path(ctx, base_path, query);
+  m2x_free(base_path);
+
+  ret = m2x_client_get(ctx, path, out);
+  m2x_free(path);
+  return ret;
 }
 
 int m2x_feed_triggers(m2x_context *ctx, const char *feed_id, char **out)
@@ -109,20 +120,21 @@ int m2x_feed_trigger(m2x_context *ctx, const char *feed_id,
 }
 
 int m2x_feed_update_location(m2x_context *ctx, const char *feed_id,
-                             const char *data)
+                             const char *data, char **out)
 {
   int ret;
   char *path;
 
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/location", feed_id);
 
-  ret = m2x_client_put(ctx, path, data, NULL);
+  ret = m2x_client_put(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
-                           const char *stream_name, const char *data)
+                           const char *stream_name, const char *data,
+                           char **out)
 {
   int ret;
   char *path;
@@ -130,13 +142,13 @@ int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/streams/%s",
                                            feed_id, stream_name);
 
-  ret = m2x_client_put(ctx, path, data, NULL);
+  ret = m2x_client_put(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_delete_stream(m2x_context *ctx, const char *feed_id,
-                           const char *stream_name)
+                           const char *stream_name, char **out)
 {
   int ret;
   char *path;
@@ -144,39 +156,40 @@ int m2x_feed_delete_stream(m2x_context *ctx, const char *feed_id,
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/streams/%s",
                                            feed_id, stream_name);
 
-  ret = m2x_client_delete(ctx, path, NULL);
+  ret = m2x_client_delete(ctx, path, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_post_multiple(m2x_context *ctx, const char *feed_id,
-                           const char *data)
+                           const char *data, char **out)
 {
   int ret;
   char *path;
 
   path = m2x_internal_create_format_string(ctx, "/feeds/%s", feed_id);
 
-  ret = m2x_client_post(ctx, path, data, NULL);
+  ret = m2x_client_post(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_create_trigger(m2x_context *ctx, const char *feed_id,
-                            const char *data)
+                            const char *data, char **out)
 {
   int ret;
   char *path;
 
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/triggers", feed_id);
 
-  ret = m2x_client_post(ctx, path, data, NULL);
+  ret = m2x_client_post(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_update_trigger(m2x_context *ctx, const char *feed_id,
-                            const char *trigger_id, const char *data)
+                            const char *trigger_id, const char *data,
+                            char **out)
 {
   int ret;
   char *path;
@@ -184,13 +197,13 @@ int m2x_feed_update_trigger(m2x_context *ctx, const char *feed_id,
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/triggers/%s",
                                            feed_id, trigger_id);
 
-  ret = m2x_client_put(ctx, path, data, NULL);
+  ret = m2x_client_put(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_test_trigger(m2x_context *ctx, const char *feed_id,
-                          const char *trigger_id)
+                          const char *trigger_id, char **out)
 {
   int ret;
   char *path;
@@ -198,13 +211,13 @@ int m2x_feed_test_trigger(m2x_context *ctx, const char *feed_id,
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/triggers/%s/test",
                                            feed_id, trigger_id);
 
-  ret = m2x_client_post(ctx, path, NULL, NULL);
+  ret = m2x_client_post(ctx, path, NULL, out);
   m2x_free(path);
   return ret;
 }
 
 int m2x_feed_delete_trigger(m2x_context *ctx, const char *feed_id,
-                            const char *trigger_id)
+                            const char *trigger_id, char **out)
 {
   int ret;
   char *path;
@@ -212,7 +225,7 @@ int m2x_feed_delete_trigger(m2x_context *ctx, const char *feed_id,
   path = m2x_internal_create_format_string(ctx, "/feeds/%s/triggers/%s",
                                            feed_id, trigger_id);
 
-  ret = m2x_client_delete(ctx, path, NULL);
+  ret = m2x_client_delete(ctx, path, out);
   m2x_free(path);
   return ret;
 }
@@ -297,12 +310,13 @@ int m2x_json_feed_stream(m2x_context *ctx, const char *feed_id,
 }
 
 int m2x_json_feed_stream_values(m2x_context *ctx, const char *feed_id,
-                                const char *stream_name, JSON_Value **out)
+                                const char *stream_name, const char *query,
+                                JSON_Value **out)
 {
   int ret;
   char *str;
 
-  ret = m2x_feed_stream_values(ctx, feed_id, stream_name, &str);
+  ret = m2x_feed_stream_values(ctx, feed_id, stream_name, query, &str);
   if (ret == 0) {
     if (out) { *out = json_parse_string(str); }
     m2x_free(str);
@@ -331,6 +345,120 @@ int m2x_json_feed_trigger(m2x_context *ctx, const char *feed_id,
   char *str;
 
   ret = m2x_feed_trigger(ctx, feed_id, trigger_id, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_update_location(m2x_context *ctx, const char *feed_id,
+                                  const char *data, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_update_location(ctx, feed_id, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_update_stream(m2x_context *ctx, const char *feed_id,
+                                const char *stream_name, const char *data,
+                                JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_update_stream(ctx, feed_id, stream_name, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_delete_stream(m2x_context *ctx, const char *feed_id,
+                                const char *stream_name, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_delete_stream(ctx, feed_id, stream_name, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_post_multiple(m2x_context *ctx, const char *feed_id,
+                                const char *data, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_post_multiple(ctx, feed_id, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_create_trigger(m2x_context *ctx, const char *feed_id,
+                                 const char *data, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_create_trigger(ctx, feed_id, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_update_trigger(m2x_context *ctx, const char *feed_id,
+                                 const char *trigger_id, const char *data,
+                                 JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_update_trigger(ctx, feed_id, trigger_id, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_test_trigger(m2x_context *ctx, const char *feed_id,
+                               const char *trigger_id, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_test_trigger(ctx, feed_id, trigger_id, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_feed_delete_trigger(m2x_context *ctx, const char *feed_id,
+                                 const char *trigger_id, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_feed_delete_trigger(ctx, feed_id, trigger_id, &str);
   if (ret == 0) {
     if (out) { *out = json_parse_string(str); }
     m2x_free(str);
