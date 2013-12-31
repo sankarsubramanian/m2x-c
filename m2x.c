@@ -12,6 +12,7 @@ m2x_context *m2x_open(const char* key)
 
   ctx = (m2x_context *) m2x_malloc(NULL, sizeof(m2x_context));
   memset(ctx, 0, sizeof(m2x_context));
+  ctx->verbose = 0;
   ctx->curl = curl_easy_init();
   ctx->headers = curl_slist_append(ctx->headers, "User-Agent: M2X/0.0.1 (C libcurl)");
   ctx->headers = curl_slist_append(ctx->headers, "Content-Type: application/json");
@@ -28,6 +29,13 @@ void m2x_close(m2x_context *ctx)
   curl_slist_free_all(ctx->headers);
   curl_easy_cleanup(ctx->curl);
   m2x_free(ctx);
+}
+
+void m2x_set_verbose(m2x_context *ctx, int verbose)
+{
+  if (ctx) {
+    ctx->verbose = verbose;
+  }
 }
 
 void *m2x_malloc(m2x_context *ctx, size_t len)
