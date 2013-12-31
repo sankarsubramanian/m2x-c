@@ -42,14 +42,15 @@ int m2x_key_create(m2x_context *ctx, const char *data, char **out)
   return m2x_client_post(ctx, "/keys", data, out);
 }
 
-int m2x_key_update(m2x_context *ctx, const char *key, const char *data)
+int m2x_key_update(m2x_context *ctx, const char *key, const char *data,
+                   char **out)
 {
   int ret;
   char *path;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s", key);
 
-  ret = m2x_client_put(ctx, path, data, NULL);
+  ret = m2x_client_put(ctx, path, data, out);
   m2x_free(path);
   return ret;
 }
@@ -66,14 +67,14 @@ int m2x_key_regenerate(m2x_context *ctx, const char *key, char **out)
   return ret;
 }
 
-int m2x_key_delete(m2x_context *ctx, const char *key)
+int m2x_key_delete(m2x_context *ctx, const char *key, char **out)
 {
   int ret;
   char *path;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s", key);
 
-  ret = m2x_client_delete(ctx, path, NULL);
+  ret = m2x_client_delete(ctx, path, out);
   m2x_free(path);
   return ret;
 }
@@ -118,6 +119,20 @@ int m2x_json_key_create(m2x_context *ctx, const char *data, JSON_Value **out)
   return ret;
 }
 
+int m2x_json_key_update(m2x_context *ctx, const char *key, const char *data,
+                        JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_key_update(ctx, key, data, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
 int m2x_json_key_regenerate(m2x_context *ctx, const char *key,
                             JSON_Value **out)
 {
@@ -125,6 +140,19 @@ int m2x_json_key_regenerate(m2x_context *ctx, const char *key,
   char *str;
 
   ret = m2x_key_regenerate(ctx, key, &str);
+  if (ret == 0) {
+    if (out) { *out = json_parse_string(str); }
+    m2x_free(str);
+  }
+  return ret;
+}
+
+int m2x_json_key_delete(m2x_context *ctx, const char *key, JSON_Value **out)
+{
+  int ret;
+  char *str;
+
+  ret = m2x_key_delete(ctx, key, &str);
   if (ret == 0) {
     if (out) { *out = json_parse_string(str); }
     m2x_free(str);

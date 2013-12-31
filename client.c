@@ -124,7 +124,8 @@ int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
   curl_easy_setopt(ctx->curl, CURLOPT_URL, url);
   m2x_free(url);
   curl_easy_setopt(ctx->curl, CURLOPT_HTTPHEADER, ctx->headers);
-  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS, data);
+  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS,
+                   (data && (strlen(data) > 0)) ? data : "");
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEDATA, write_ctx);
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEFUNCTION, write_callback);
   res = curl_easy_perform(ctx->curl);
@@ -159,7 +160,8 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
   m2x_free(url);
   curl_easy_setopt(ctx->curl, CURLOPT_HTTPHEADER, ctx->headers);
   curl_easy_setopt(ctx->curl, CURLOPT_CUSTOMREQUEST, "PUT");
-  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS, data);
+  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS,
+                   (data && (strlen(data) > 0)) ? data : "");
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEDATA, write_ctx);
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEFUNCTION, write_callback);
   res = curl_easy_perform(ctx->curl);
