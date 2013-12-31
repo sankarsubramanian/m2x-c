@@ -17,7 +17,7 @@ int main()
 
   sprintf(buf, "{\"value\":\"%d\"}", rand());
   ctx = m2x_open(M2X_KEY);
-  if ((m2x_feed_update_stream(ctx, FEED_ID, STREAM_NAME, buf) == 0) &&
+  if ((m2x_feed_update_stream(ctx, FEED_ID, STREAM_NAME, buf, NULL) == 0) &&
       (m2x_feed_stream(ctx, FEED_ID, STREAM_NAME, &str) == 0)) {
     printf("%s\n", str);
     m2x_free(str);
