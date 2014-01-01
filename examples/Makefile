@@ -3,7 +3,13 @@ CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 
-all: m2x_status read_feeds update_stream
+all: m2x_status read_feeds update_stream create_datasource
+
+create_datasource: create_datasource.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+create_datasource.o: create_datasource.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 update_stream: update_stream.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
