@@ -1,5 +1,5 @@
-CC=clang
-CFLAGS=-O0 -g -Wall -Wextra -std=c89 -I..
+CC=gcc
+CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 

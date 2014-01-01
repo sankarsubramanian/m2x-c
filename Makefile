@@ -1,6 +1,6 @@
 AR=ar
-CC=clang
-CFLAGS=-O0 -g -Wall -Wextra -std=c89
+CC=gcc
+CFLAGS=-O2 -Wall -Wextra -std=c89
 LDFLAGS=-lcurl
 M2X_LIB=m2x.a
 
