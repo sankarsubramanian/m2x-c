@@ -16,3 +16,8 @@
 *.exe
 *.out
 *.app
+
+# Examples
+examples/m2x_status
+examples/read_feeds
+examples/update_stream
