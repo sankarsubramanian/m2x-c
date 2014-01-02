@@ -82,7 +82,7 @@ int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
 
 `feed_id` and `stream_name` are just plain feed id and stream name used. Notice that the C library will help you encode the data here. So if your stream name has a space in it(for example, `my stream 1`), there's no need to escape that before calling this function.
 
-You can pass the data you want to send to M2X using `data` parameter here. For now, the M2X C library only support JSON string format. You need to either create the JSON string by hand(like the examples provided), or use a [JSON builder](http://www.json.org/) to create one.
+You can pass the data you want to send to M2X using `data` parameter here. For now, the M2X C library only support JSON string format. You need to either create the JSON string by hand(like the examples provided), or use a [JSON builder](http://www.json.org/) to create one. In addition, we also provide a JSON serializer that you can use to build such a JSON string.
 
 As the reader functions, you can also use the `out` parameter here to get the output from M2X. However, for writer functions, we don't always care about what is returned from the server. A `NULL` value can be used in this case.
 
@@ -95,7 +95,11 @@ For each M2X API function, we also have a JSON variant, which is prefixed as `m2
 
 You can refer to the example `read_feeds` for a rough idea on how to use the parson library.
 
-We may also add a JSON Serializer to help you prepare the JSON string to send to M2X in the future.
+## JSON Serializer
+
+In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON(null, boolean, number and string) are supported. Please refer to the example `post_multiple_json` for an example on how to use the library.
+
+What's worth mentioning is that since floating point number(such as double) may contain as many as several hundred bytes. We don't yet have a native function for packing arbitrary double in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
 
 ## Verbose mode
 
