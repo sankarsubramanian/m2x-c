@@ -4,7 +4,7 @@ CFLAGS=-O2 -Wall -Wextra -std=c89
 LDFLAGS=-lcurl
 M2X_LIB=m2x.a
 
-$(M2X_LIB): feed.o blueprint.o batch.o datasource.o key.o client.o utility.o m2x.o parson.o
+$(M2X_LIB): feed.o blueprint.o batch.o datasource.o key.o client.o serializer.o utility.o m2x.o parson.o
 	$(AR) -rcs $@ $^
 
 feed.o: feed.c m2x.h client.h feed.h utility.h third_party/parson/parson.h
@@ -23,6 +23,9 @@ key.o: key.c m2x.h client.h key.h utility.h third_party/parson/parson.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 client.o: client.c client.h m2x.h
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+serializer.o: serializer.c serializer.h m2x.h
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 utility.o: utility.c utility.h m2x.h

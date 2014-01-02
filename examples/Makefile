@@ -3,12 +3,18 @@ CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 
-all: m2x_status read_feeds update_stream create_datasource
+all: m2x_status read_feeds update_stream post_multiple_json create_datasource
 
 create_datasource: create_datasource.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
 
 create_datasource.o: create_datasource.c
+	$(CC) -o $@ $(CFLAGS) -c $<
+
+post_multiple_json: post_multiple_json.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+post_multiple_json.o: post_multiple_json.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 update_stream: update_stream.o $(M2X_LIB)

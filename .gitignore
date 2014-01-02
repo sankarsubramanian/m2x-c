@@ -22,3 +22,4 @@ examples/m2x_status
 examples/read_feeds
 examples/update_stream
 examples/create_datasource
+examples/post_multiple_json
