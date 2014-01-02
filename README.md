@@ -17,7 +17,7 @@ If you have questions about any M2X specific terms, please consult the M2X gloss
 Setup
 =====
 
-The library is written in [C89](http://en.wikipedia.org/wiki/ANSI_C) standard. So you can use most of the C compiliers including gcc and clang to compile the source code. The only external dependency is [libcurl](http://curl.haxx.se/libcurl/), please refer to the documentation of your OS for how to install libcurl. In fact, most Linux distributions come with libcurl support natively.
+The library is written in [C89](http://en.wikipedia.org/wiki/ANSI_C) standard. So you can use most C compilers, including gcc and clang, to compile the source code. The only external dependency is [libcurl](http://curl.haxx.se/libcurl/) (please refer to the documentation for your OS for instructions on how to install libcurl). In fact, most Linux distributions come with libcurl support natively.
 
 To build the m2x-c library and the examples, follow the next steps:
 
@@ -29,20 +29,20 @@ $ make
 $ make examples
 ```
 
-If no errors occur, the M2X library will be in `m2x-c/m2x.a` file, the examples will be in `m2x-c/examples/` folder. Feel free to link and use the m2x library in your own executables.
+If no errors occur, the M2X library will be in the `m2x-c/m2x.a` file and the examples will be in `m2x-c/examples/` folder. Feel free to link and use the m2x library in your own executables.
 
 API
 ===
 
 ## Initialization
 
-To use M2X C library, you need to first create a M2X context using the following function:
+To use the M2X C library, you need to first create a M2X context using the following function:
 
 ```
 m2x_context *m2x_open(const char *key);
 ```
 
-This function resides in `m2x.h` header file. The only argument to this function is your M2X API key, which you can obtain from the M2X website.
+This function resides in `m2x.h` header file. The only argument to this function is your M2X API key, which you can obtain from the [M2X website](https://m2x.att.com).
 
 ## Reader functions
 
@@ -52,7 +52,7 @@ After initialzing, you can call all kinds of M2X API functions. For example, the
 int m2x_feed_list(m2x_context *ctx, const char *query, char **out);
 ```
 
-With the second argument `query`, you can pass in arguments to filter what feeds you want to show. The supported variables are listed at [here](https://m2x.att.com/developer/documentation/feed#List-Search-Feeds). For now, you need to organize the query in query string format by hand. For example, the following query string can be used:
+With the second argument `query`, you can pass in arguments to filter what feeds you want to show. The supported variables are listed [here](https://m2x.att.com/developer/documentation/feed#List-Search-Feeds). For now, you need to organize the query in query string format by hand. For example, the following query string can be used:
 
 ```
 q=abc&page=2&limit=3
@@ -80,9 +80,9 @@ int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
                            char **out);
 ```
 
-`feed_id` and `stream_name` are just plain feed id and stream name used. Notice that the C library will help you encode the data here. So if your stream name has a space in it(for example, `my stream 1`), there's no need to escape that before calling this function.
+`feed_id` and `stream_name` are just plain Feed ID and Stream name used. Notice that the C library will help you encode the data here, so if your Stream name has a space in it (for example, `my stream 1`), there's no need to escape that before calling this function.
 
-You can pass the data you want to send to M2X using `data` parameter here. For now, the M2X C library only support JSON string format. You need to either create the JSON string by hand(like the examples provided), or use a [JSON builder](http://www.json.org/) to create one. In addition, we also provide a JSON serializer that you can use to build such a JSON string.
+You can pass the data you want to send to M2X using the `data` parameter here. For now, the M2X C library only supports JSON string format. You need to either create the JSON string by hand (like in the provided examples), or use a [JSON builder](http://www.json.org/) to create one. In addition, we also provide a JSON serializer that you can use to build such a JSON string.
 
 As the reader functions, you can also use the `out` parameter here to get the output from M2X. However, for writer functions, we don't always care about what is returned from the server. A `NULL` value can be used in this case.
 
@@ -91,25 +91,25 @@ As the reader functions, you can also use the `out` parameter here to get the ou
 
 Besides the normal way of returning raw JSON strings, we also include [parson](https://github.com/kgabis/parson) to help parse the returned values and return JSON objects to ease programmer's work.
 
-For each M2X API function, we also have a JSON variant, which is prefixed as `m2x_json_...`, which returns a `JSON_Value *` typed sturct. You can use the [APIs](https://github.com/kgabis/parson/blob/master/parson.h) provided by parson to peek into this struct and get all kinds of values in this JSON object/array very easily.
+For each M2X API function, we also have a JSON variant, which is prefixed as `m2x_json_...`, which returns a `JSON_Value *` typed struct. You can use the [APIs](https://github.com/kgabis/parson/blob/master/parson.h) provided by parson to peek into this struct and get all kinds of values in this JSON object/array very easily.
 
 You can refer to the example `read_feeds` for a rough idea on how to use the parson library.
 
 ## JSON Serializer
 
-In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON(null, boolean, number and string) are supported. Please refer to the example `post_multiple_json` for an example on how to use the library.
+In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON (null, boolean, number and string) are supported. Please refer to the example `post_multiple_json` for an example on how to use the library.
 
-What's worth mentioning is that since floating point number(such as double) may contain as many as several hundred bytes. We don't yet have a native function for packing arbitrary double in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
+It's worth mentioning that since floating point numbers (such as double) may contain as many as several hundred bytes, we don't yet have a native function for packing arbitrary double in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
 
 ## Verbose mode
 
-To help debugging M2X API functions, M2X library supports a verbose mode. You can use the following code to turn it on:
+To help in debugging M2X API functions, the M2X C library supports a verbose mode. You can use the following code to turn it on:
 
 ```
 m2x_set_verbose(ctx, 1);
 ```
 
-When verbose mode is on, M2X C library will print a lot of debugging information from libcurl to `stdout`. An example of the output looks like this:
+When verbose mode is on, the M2X C library will print debugging information from libcurl to `stdout`. An example of the output looks like this:
 
 ```
 * Adding handle: conn: 0x7fdc33004400
@@ -152,3 +152,7 @@ To turn the verbose mode off, use the following code:
 ```
 m2x_set_verbose(ctx, 0);
 ```
+
+## License
+
+The M2X C Client is available under the MIT license. See the LICENSE file for more information.
