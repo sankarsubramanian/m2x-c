@@ -4,7 +4,7 @@
 #include "m2x.h"
 #include "client.h"
 
-static const char *M2X_HOST = "http://api-m2x.att.com/v1";
+static const char *M2X_HOST = "http://api-m2x.att.com/v2";
 
 char *create_url(m2x_context *ctx, const char *path)
 {
@@ -84,6 +84,7 @@ int m2x_client_get(m2x_context *ctx, const char *path, char **out)
   curl_write_context *write_ctx;
   char *url;
   CURLcode res;
+  long code;
 
   write_ctx = create_write_context(ctx);
   url = create_url(ctx, path);
@@ -102,6 +103,11 @@ int m2x_client_get(m2x_context *ctx, const char *path, char **out)
     release_write_context(write_ctx, 1);
     return res;
   }
+  res = curl_easy_getinfo(ctx->curl, CURLINFO_RESPONSE_CODE, &code);
+  if (res != CURLE_OK) {
+    release_write_context(write_ctx, 1);
+    return res;
+  }
 
   if (out != NULL) {
     *out = write_ctx->p;
@@ -109,7 +115,7 @@ int m2x_client_get(m2x_context *ctx, const char *path, char **out)
     m2x_free(write_ctx->p);
   }
   release_write_context(write_ctx, 0);
-  return res;
+  return (int) code;
 }
 
 int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
@@ -118,6 +124,7 @@ int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
   curl_write_context *write_ctx;
   char *url;
   CURLcode res;
+  long code;
 
   write_ctx = create_write_context(ctx);
   url = create_url(ctx, path);
@@ -138,6 +145,11 @@ int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
     release_write_context(write_ctx, 1);
     return res;
   }
+  res = curl_easy_getinfo(ctx->curl, CURLINFO_RESPONSE_CODE, &code);
+  if (res != CURLE_OK) {
+    release_write_context(write_ctx, 1);
+    return res;
+  }
 
   if (out != NULL) {
     *out = write_ctx->p;
@@ -145,7 +157,7 @@ int m2x_client_post(m2x_context *ctx, const char *path, const char *data,
     m2x_free(write_ctx->p);
   }
   release_write_context(write_ctx, 0);
-  return res;
+  return (int) code;
 }
 
 int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
@@ -154,6 +166,7 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
   curl_write_context *write_ctx;
   char *url;
   CURLcode res;
+  long code;
 
   write_ctx = create_write_context(ctx);
   url = create_url(ctx, path);
@@ -175,6 +188,11 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
     release_write_context(write_ctx, 1);
     return res;
   }
+  res = curl_easy_getinfo(ctx->curl, CURLINFO_RESPONSE_CODE, &code);
+  if (res != CURLE_OK) {
+    release_write_context(write_ctx, 1);
+    return res;
+  }
 
   if (out != NULL) {
     *out = write_ctx->p;
@@ -182,14 +200,15 @@ int m2x_client_put(m2x_context *ctx, const char *path, const char *data,
     m2x_free(write_ctx->p);
   }
   release_write_context(write_ctx, 0);
-  return res;
+  return (int) code;
 }
 
-int m2x_client_delete(m2x_context *ctx, const char *path, char **out)
+int m2x_client_delete(m2x_context *ctx, const char *path, const char *data, char **out)
 {
   curl_write_context *write_ctx;
   char *url;
   CURLcode res;
+  long code;
 
   write_ctx = create_write_context(ctx);
   url = create_url(ctx, path);
@@ -199,6 +218,9 @@ int m2x_client_delete(m2x_context *ctx, const char *path, char **out)
   if (ctx->verbose) { curl_easy_setopt(ctx->curl, CURLOPT_VERBOSE, 1); }
   curl_easy_setopt(ctx->curl, CURLOPT_HTTPHEADER, ctx->headers);
   curl_easy_setopt(ctx->curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+  if (data && (strlen(data) > 0)) {
+  curl_easy_setopt(ctx->curl, CURLOPT_POSTFIELDS, data);
+  }
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEDATA, write_ctx);
   curl_easy_setopt(ctx->curl, CURLOPT_WRITEFUNCTION, write_callback);
   res = curl_easy_perform(ctx->curl);
@@ -208,6 +230,11 @@ int m2x_client_delete(m2x_context *ctx, const char *path, char **out)
             curl_easy_strerror(res));
     release_write_context(write_ctx, 1);
   }
+  res = curl_easy_getinfo(ctx->curl, CURLINFO_RESPONSE_CODE, &code);
+  if (res != CURLE_OK) {
+    release_write_context(write_ctx, 1);
+    return res;
+  }
 
   if (out != NULL) {
     *out = write_ctx->p;
@@ -215,5 +242,5 @@ int m2x_client_delete(m2x_context *ctx, const char *path, char **out)
     m2x_free(write_ctx->p);
   }
   release_write_context(write_ctx, 0);
-  return res;
+  return (int) code;
 }

@@ -1,161 +1,72 @@
-#include <string.h>
-
-#include "m2x.h"
 #include "client.h"
 #include "key.h"
 #include "utility.h"
 
-int m2x_key_list(m2x_context *ctx, const char *optional_feed_id, char **out)
+m2x_response m2x_key_list(m2x_context *ctx, const char *query)
 {
-  int ret, len;
-  char *path;
+  int status;
+  char *path, *out = NULL;
 
-  len = 5 + 1;
-  if (optional_feed_id) { len += 6 + strlen(optional_feed_id); }
-  path = (char *) m2x_malloc(ctx, len);
+  path = m2x_internal_create_query_path(ctx, "/keys", query);
 
-  strcpy(path, "/keys");
-  if (optional_feed_id) {
-    strcpy(path + 5, "?feed=");
-    strcpy(path + 11, optional_feed_id);
-  }
-
-  ret = m2x_client_get(ctx, path, out);
+  status = m2x_client_get(ctx, path, &out);
   m2x_free(path);
-  return ret;
+  return m2x_make_response(ctx, status, out);
 }
 
-int m2x_key_view(m2x_context *ctx, const char *key, char **out)
+m2x_response m2x_key_create(m2x_context *ctx, const char *data)
 {
-  int ret;
-  char *path;
+  int status;
+  char *out = NULL;
+
+  status = m2x_client_post(ctx, "/keys", data, &out);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_key_view(m2x_context *ctx, const char *key)
+{
+  int status;
+  char *path, *out = NULL;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s", key);
 
-  ret = m2x_client_get(ctx, path, out);
+  status = m2x_client_get(ctx, path, &out);
   m2x_free(path);
-  return ret;
+  return m2x_make_response(ctx, status, out);
 }
 
-int m2x_key_create(m2x_context *ctx, const char *data, char **out)
+m2x_response m2x_key_update(m2x_context *ctx, const char *key, const char *data)
 {
-  return m2x_client_post(ctx, "/keys", data, out);
-}
-
-int m2x_key_update(m2x_context *ctx, const char *key, const char *data,
-                   char **out)
-{
-  int ret;
-  char *path;
+  int status;
+  char *path, *out = NULL;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s", key);
 
-  ret = m2x_client_put(ctx, path, data, out);
+  status = m2x_client_put(ctx, path, data, &out);
   m2x_free(path);
-  return ret;
+  return m2x_make_response(ctx, status, out);
 }
 
-int m2x_key_regenerate(m2x_context *ctx, const char *key, char **out)
+m2x_response m2x_key_regenerate(m2x_context *ctx, const char *key)
 {
-  int ret;
-  char *path;
+  int status;
+  char *path, *out = NULL;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s/regenerate", key);
 
-  ret = m2x_client_post(ctx, path, NULL, out);
+  status = m2x_client_post(ctx, path, NULL, &out);
   m2x_free(path);
-  return ret;
+  return m2x_make_response(ctx, status, out);
 }
 
-int m2x_key_delete(m2x_context *ctx, const char *key, char **out)
+m2x_response m2x_key_delete(m2x_context *ctx, const char *key)
 {
-  int ret;
-  char *path;
+  int status;
+  char *path, *out = NULL;
 
   path = m2x_internal_create_format_string(ctx, "/keys/%s", key);
 
-  ret = m2x_client_delete(ctx, path, out);
+  status = m2x_client_delete(ctx, path, NULL, &out);
   m2x_free(path);
-  return ret;
-}
-
-int m2x_json_key_list(m2x_context *ctx, const char *optional_feed_id,
-                      JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_list(ctx, optional_feed_id, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
-}
-
-int m2x_json_key_view(m2x_context *ctx, const char *key, JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_view(ctx, key, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
-}
-
-int m2x_json_key_create(m2x_context *ctx, const char *data, JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_create(ctx, data, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
-}
-
-int m2x_json_key_update(m2x_context *ctx, const char *key, const char *data,
-                        JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_update(ctx, key, data, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
-}
-
-int m2x_json_key_regenerate(m2x_context *ctx, const char *key,
-                            JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_regenerate(ctx, key, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
-}
-
-int m2x_json_key_delete(m2x_context *ctx, const char *key, JSON_Value **out)
-{
-  int ret;
-  char *str;
-
-  ret = m2x_key_delete(ctx, key, &str);
-  if (ret == 0) {
-    if (out) { *out = json_parse_string(str); }
-    m2x_free(str);
-  }
-  return ret;
+  return m2x_make_response(ctx, status, out);
 }

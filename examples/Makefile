@@ -3,39 +3,27 @@ CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 
-all: m2x_status read_feeds update_stream post_multiple_json create_datasource
-
-create_datasource: create_datasource.o $(M2X_LIB)
-	$(CC) -o $@ $(LDFLAGS) $^
-
-create_datasource.o: create_datasource.c
-	$(CC) -o $@ $(CFLAGS) -c $<
-
-post_multiple_json: post_multiple_json.o $(M2X_LIB)
-	$(CC) -o $@ $(LDFLAGS) $^
-
-post_multiple_json.o: post_multiple_json.c
-	$(CC) -o $@ $(CFLAGS) -c $<
-
-update_stream: update_stream.o $(M2X_LIB)
-	$(CC) -o $@ $(LDFLAGS) $^
-
-update_stream.o: update_stream.c
-	$(CC) -o $@ $(CFLAGS) -c $<
-
-read_feeds: read_feeds.o $(M2X_LIB)
-	$(CC) -o $@ $(LDFLAGS) $^
-
-read_feeds.o: read_feeds.c
-	$(CC) -o $@ $(CFLAGS) -c $<
+all: m2x_status list_devices create_device update_device delete_device_values
 
 m2x_status: m2x_status.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
 
-m2x_status.o: m2x_status.c
+list_devices: list_devices.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+create_device: create_device.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+update_device: update_device.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+delete_device_values: delete_device_values.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+%.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
 clean:
-	rm -rf m2x_status read_feeds update_stream *.o
+	rm -rf *.o $(BINS)
 
 .PHONY: all clean

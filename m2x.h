@@ -11,6 +11,7 @@ typedef struct m2x_context {
   CURL *curl;
   struct curl_slist *headers;
   int verbose;
+  int expand_json;
 } m2x_context;
 
 m2x_context *m2x_open(const char *key);
