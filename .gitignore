@@ -23,3 +23,4 @@ examples/delete_device_values
 examples/list_devices
 examples/update_device
 examples/m2x_status
+examples/serialize_json

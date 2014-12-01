@@ -3,7 +3,7 @@ CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 
-all: m2x_status list_devices create_device update_device delete_device_values
+all: m2x_status list_devices create_device update_device delete_device_values serialize_json
 
 m2x_status: m2x_status.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
@@ -18,6 +18,9 @@ update_device: update_device.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
 
 delete_device_values: delete_device_values.o $(M2X_LIB)
+	$(CC) -o $@ $(LDFLAGS) $^
+
+serialize_json: serialize_json.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
 
 %.o: %.c

@@ -44,60 +44,75 @@ m2x_context *m2x_open(const char *key);
 
 This function resides in `m2x.h` header file. The only argument to this function is your M2X API key, which you can obtain from the [M2X website](https://m2x.att.com).
 
-## Reader functions
+## Calling API functions
 
-After initialzing, you can call all kinds of M2X API functions. For example, the following function in `feed.h` can be used to get a list of your feeds:
-
-```
-int m2x_feed_list(m2x_context *ctx, const char *query, char **out);
-```
-
-With the second argument `query`, you can pass in arguments to filter what feeds you want to show. The supported variables are listed [here](https://m2x.att.com/developer/documentation/feed#List-Search-Feeds). For now, you need to organize the query in query string format by hand. For example, the following query string can be used:
+All API functions will have the following type of signature:
 
 ```
-q=abc&page=2&limit=3
+m2x_response m2x_some_api_function(m2x_context *ctx, const char *arg1, const char *arg2, ...);
 ```
 
-The results of the API function will be stored in a char buffer, it will be returned via the `out` pointer. **The caller of the function is responsible for releasing the buffer**. This can be done using the `m2x_free` function as listed below:
+Depending the exact function in use, different number of arguments may be present. For example, below is a function used to list stream values of a device:
 
 ```
-char *out = NULL;
-m2x_feed_list(ctx, NULL, &out);
-m2x_free(out);
+m2x_response m2x_device_stream_list_values(m2x_context *ctx, const char *id, const char *name, const char *query);
 ```
 
-Notice we are passing `NULL` here to the `query` argument, this means we are not adding any filter to the function.
+It requires the context object, device ID, stream name and a query string. The query string is the same you would normally see in an HTTP request, like the following:
 
-If you don't care about the returned value of the API function, you can simply pass `NULL` to the `out` parameter. No buffers are needed to be freed in this case.
+```
+max=100&limit=10
+```
+
+We will talk about `m2x_response` in the next session.
+
+## Response object
+
+All API functions will return an `m2x_response` object. This object contai
+ns the status code, raw response as well as JSON-parsed response. The type of this object is as follows:
+
+```
+typedef struct m2x_response {
+  int status;
+  /* Raw response from server */
+  char *raw;
+  /* Parsed JSON representation */
+  JSON_Value *json;
+} m2x_response;
+```
+
+`status` field contains the same status code as those you can see in an HTTP request. `raw` contains the raw reply from the API server(not necessarily NULL-terminated), while `data` contains the reply in JSON format.
+
+The library for parsing JSON we use here is [parson](https://github.com/kgabis/parson). However, with the help of `raw` field, you can parse the response using any JSON parser you like. We actually have an `expand_json` on `m2x_content` object, this field defaults to 1, which means parson will be used to parse JSON reply. If you change this field to 0, we won't parse the raw reply for you, thus you can provide your own parsing code.
+
+A handful of helpers are created for better usage of this object:
+
+```
+int m2x_is_success(const m2x_response *response);
+int m2x_is_client_error(const m2x_response *response);
+int m2x_is_server_error(const m2x_response *response);
+int m2x_is_error(const m2x_response *response);
+void m2x_release_response(m2x_response *response);
+```
+
+Notice `m2x_release_response` only frees the internal `raw` and `json` fields. There's no need to free any `m2x_response` object, since it is always passed by value.
 
 ## Writer functions
 
 You can also send data to M2X service using the C library. The following function can be used to update stream values:
 
 ```
-int m2x_feed_update_stream(m2x_context *ctx, const char *feed_id,
-                           const char *stream_name, const char *data,
-                           char **out);
+m2x_response m2x_device_stream_post_values(m2x_context *ctx, const char *device_id,
+                                           const char *stream_name, const char *data);
 ```
 
-`feed_id` and `stream_name` are just plain Feed ID and Stream name used. Notice that the C library will help you encode the data here, so if your Stream name has a space in it (for example, `my stream 1`), there's no need to escape that before calling this function.
+`device_id` and `stream_name` are just plain Device ID and Stream name used. Notice that the C library will help you encode the data here, so if your Stream name has a space in it (for example, `my stream 1`), there's no need to escape that before calling this function.
 
 You can pass the data you want to send to M2X using the `data` parameter here. For now, the M2X C library only supports JSON string format. You need to either create the JSON string by hand (like in the provided examples), or use a [JSON builder](http://www.json.org/) to create one. In addition, we also provide a JSON serializer that you can use to build such a JSON string.
 
-As the reader functions, you can also use the `out` parameter here to get the output from M2X. However, for writer functions, we don't always care about what is returned from the server. A `NULL` value can be used in this case.
-
-
-## JSON Deserializer
-
-Besides the normal way of returning raw JSON strings, we also include [parson](https://github.com/kgabis/parson) to help parse the returned values and return JSON objects to ease programmer's work.
-
-For each M2X API function, we also have a JSON variant, which is prefixed as `m2x_json_...`, which returns a `JSON_Value *` typed struct. You can use the [APIs](https://github.com/kgabis/parson/blob/master/parson.h) provided by parson to peek into this struct and get all kinds of values in this JSON object/array very easily.
-
-You can refer to the example `read_feeds` for a rough idea on how to use the parson library.
-
 ## JSON Serializer
 
-In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON (null, boolean, number and string) are supported. Please refer to the example `post_multiple_json` for an example on how to use the library.
+In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON (null, boolean, number and string) are supported. Please refer to the example `serialize_json` for an example on how to use the library.
 
 It's worth mentioning that since floating point numbers (such as double) may contain as many as several hundred bytes, we don't yet have a native function for packing arbitrary double in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
 
