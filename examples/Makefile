@@ -3,7 +3,9 @@ CFLAGS=-O2 -Wall -Wextra -std=c89 -I..
 LDFLAGS=-lcurl
 M2X_LIB=../m2x.a
 
-all: m2x_status list_devices create_device update_device delete_device_values serialize_json
+BINS=m2x_status list_devices create_device update_device delete_device_values serialize_json
+
+all: $(BINS)
 
 m2x_status: m2x_status.o $(M2X_LIB)
 	$(CC) -o $@ $(LDFLAGS) $^
