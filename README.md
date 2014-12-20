@@ -127,39 +127,32 @@ m2x_set_verbose(ctx, 1);
 When verbose mode is on, the M2X C library will print debugging information from libcurl to `stdout`. An example of the output looks like this:
 
 ```
-* Adding handle: conn: 0x7fdc33004400
-* Adding handle: send: 0
-* Adding handle: recv: 0
-* Curl_addHandleToPipeline: length: 1
-* - Conn 0 (0x7fdc33004400) send_pipe: 1, recv_pipe: 0
-* About to connect() to api-m2x.att.com port 80 (#0)
-*   Trying 54.214.25.232...
-* Connected to api-m2x.att.com (54.214.25.232) port 80 (#0)
-> POST /v1/datasources HTTP/1.1
+* Hostname was NOT found in DNS cache
+*   Trying 76.198.15.58...
+* Connected to api-m2x.att.com (76.198.15.58) port 80 (#0)
+> POST /v2/devices HTTP/1.1
 Host: api-m2x.att.com
 Accept: */*
-User-Agent: M2X/0.0.1 (C libcurl)
+User-Agent: M2X/2.0.0 (C libcurl)
 Content-Type: application/json
 X-M2X-KEY: b3e742805ac8576d0df925b4dfe4d401
-Content-Length: 81
+Content-Length: 115
 
-* upload completely sent off: 81 out of 81 bytes
+* upload completely sent off: 115 out of 115 bytes
 < HTTP/1.1 201 Created
+* Server nginx is not blacklisted
+< Server: nginx
+< Date: Sat, 20 Dec 2014 06:08:21 GMT
 < Content-Type: application/json
-< Date: Wed, 01 Jan 2014 06:01:55 GMT
-< Location: /datasources/a23c1d4445f52fdd8bccfac7bcc790a7
-* Server nginx/1.1.19 is not blacklisted
-< Server: nginx/1.1.19
+< Content-Length: 451
 < Status: 201 Created
+< Location: http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e
+< X-M2X-VERSION: v2.4.0-alpha
 < Vary: Accept-Encoding
-< X-M2X-VERSION: v1.0.0-beta
-< Content-Length: 398
-< Connection: keep-alive
 <
 * Connection #0 to host api-m2x.att.com left intact
-{"id":"a23c1d4445f52fdd8bccfac7bcc790a7","name":"abc","description":"def","visibility":"public","serial":null,"status":"enabled","feed":"/feeds/a23c1d4445f52fdd8bccfac7bcc790a7","tags":["123","456"],"url":"/datasources/a23c1d4445f52fdd8bccfac7bcc790a7","key":"0b28a57c811858f4c087fa3720e6f297","created":"2014-01-01T06:01:55Z","updated":"2014-01-01T06:01:55Z","batch":"/batches/","batch_name":null}
-
-...
+Status code: 201
+{"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e","name":"Sample Device","status":"enabled","serial":null,"groups":["sample"],"location":{},"visibility":"public","description":"This is a sample M2X Device","created":"2014-12-20T06:08:21.752Z","updated":"2014-12-20T06:08:21.752Z","id":"0920125bea7fa9e42484faf86c75496e","streams":{"count":0,"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e/streams"}}
 ```
 
 To turn the verbose mode off, use the following code:
