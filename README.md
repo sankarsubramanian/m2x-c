@@ -9,9 +9,9 @@ Getting Started
 1. Signup for an M2X Account: https://m2x.att.com/signup
 2. Obtain your *Master Key* from the Master Keys tab of your Account Settings: https://m2x.att.com/account
 3. Create your first Device and copy its *Device ID*: https://m2x.att.com/devices
-4. Review the M2X API Documentation: https://m2x.att.com/developer/documentation/overview
+4. Review the M2X API Documentation: https://m2x.att.com/developer/documentation/v2/overview
 
-If you have questions about any M2X specific terms, please consult the M2X glossary: https://m2x.att.com/developer/documentation/glossary
+If you have questions about any M2X specific terms, please consult the M2X glossary: https://m2x.att.com/developer/documentation/v2/glossary
 
 
 Setup
@@ -36,7 +36,7 @@ API
 
 ## Initialization
 
-To use the M2X C library, you need to first create a M2X context using the following function:
+To use the M2X C library, you need to first create an M2X context using the following function:
 
 ```
 m2x_context *m2x_open(const char *key);
@@ -68,8 +68,7 @@ We will talk about `m2x_response` in the next session.
 
 ## Response object
 
-All API functions will return an `m2x_response` object. This object contai
-ns the status code, raw response as well as JSON-parsed response. The type of this object is as follows:
+All API functions will return an `m2x_response` object. This object contains the status code, raw response as well as JSON-parsed response. The type of this object is as follows:
 
 ```
 typedef struct m2x_response {
@@ -81,9 +80,11 @@ typedef struct m2x_response {
 } m2x_response;
 ```
 
-`status` field contains the same status code as those you can see in an HTTP request. `raw` contains the raw reply from the API server(not necessarily NULL-terminated), while `data` contains the reply in JSON format.
+* `status` contains the same status code as those you can see in an HTTP request
+* `raw` contains the raw reply from the API server (not necessarily NULL-terminated)
+* `data` contains the reply in JSON format
 
-The library for parsing JSON we use here is [parson](https://github.com/kgabis/parson). However, with the help of `raw` field, you can parse the response using any JSON parser you like. We actually have an `expand_json` on `m2x_content` object, this field defaults to 1, which means parson will be used to parse JSON reply. If you change this field to 0, we won't parse the raw reply for you, thus you can provide your own parsing code.
+The library for parsing JSON we use here is [parson](https://github.com/kgabis/parson). However, with the help of `raw` field, you can parse the response using any JSON parser you like. The `expand_json` member of the `m2x_content` object defaults to 1, which indicates that parson *will* be used to parse JSON reply. If you change this field to 0, parson *will not* be used to parse the raw reply, allowing you to use your own parsing code/library.
 
 A handful of helpers are created for better usage of this object:
 
@@ -106,15 +107,15 @@ m2x_response m2x_device_stream_post_values(m2x_context *ctx, const char *device_
                                            const char *stream_name, const char *data);
 ```
 
-`device_id` and `stream_name` are just plain Device ID and Stream name used. Notice that the C library will help you encode the data here, so if your Stream name has a space in it (for example, `my stream 1`), there's no need to escape that before calling this function.
+`device_id` and `stream_name` are just the plain text Device ID and Stream that you are writing to. Notice that the C library will help you encode the data here, so if your Stream name has a space in it (for example, `my stream 1`), there's no need to escape that before calling this function.
 
 You can pass the data you want to send to M2X using the `data` parameter here. For now, the M2X C library only supports JSON string format. You need to either create the JSON string by hand (like in the provided examples), or use a [JSON builder](http://www.json.org/) to create one. In addition, we also provide a JSON serializer that you can use to build such a JSON string.
 
 ## JSON Serializer
 
-In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON (null, boolean, number and string) are supported. Please refer to the example `serialize_json` for an example on how to use the library.
+In the M2X C library, we provide a JSON serializer implementation to help you build JSON strings that you can use in writer functions. With the JSON serializer, you can easily build a JSON array or object containing arbitrary levels of (nested) data structure. All data types in JSON (null, boolean, number and string) are supported. Please refer to [serialize_json](https://github.com/attm2x/m2x-c/blob/master/examples/serialize_json.c) for an example of how to use the library.
 
-It's worth mentioning that since floating point numbers (such as double) may contain as many as several hundred bytes, we don't yet have a native function for packing arbitrary double in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
+It's worth mentioning that since floating point numbers (such as double) may contain as many as several hundred bytes, we don't yet have a native function for packing arbitrary double values in the JSON serializer. If you really do want to use double, you can specify your own precision level, use `sprintf` to keep it in a char buffer and then use `json_pack_value` to pack the data.
 
 ## Verbose mode
 
