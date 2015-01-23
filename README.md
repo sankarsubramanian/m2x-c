@@ -64,7 +64,7 @@ It requires the context object, device ID, stream name and a query string. The q
 max=100&limit=10
 ```
 
-We will talk about `m2x_response` in the next session.
+We will talk about `m2x_response` in the next section.
 
 ## Response object
 
