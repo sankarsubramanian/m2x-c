@@ -155,7 +155,7 @@ Content-Length: 115
 <
 * Connection #0 to host api-m2x.att.com left intact
 Status code: 201
-{"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e","name":"Sample Device","status":"enabled","serial":null,"groups":["sample"],"location":{},"visibility":"public","description":"This is a sample M2X Device","created":"2014-12-20T06:08:21.752Z","updated":"2014-12-20T06:08:21.752Z","id":"0920125bea7fa9e42484faf86c75496e","streams":{"count":0,"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e/streams"}}
+{"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e","name":"Sample Device","status":"enabled","serial":null,"tags":["sample"],"location":{},"visibility":"public","description":"This is a sample M2X Device","created":"2014-12-20T06:08:21.752Z","updated":"2014-12-20T06:08:21.752Z","id":"0920125bea7fa9e42484faf86c75496e","streams":{"count":0,"url":"http://api-m2x.att.com/v2/devices/0920125bea7fa9e42484faf86c75496e/streams"}}
 ```
 
 To turn the verbose mode off, use the following code:

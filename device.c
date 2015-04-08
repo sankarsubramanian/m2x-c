@@ -26,12 +26,12 @@ m2x_response m2x_device_list(m2x_context *ctx, const char *query)
   return m2x_make_response(ctx, status, out);
 }
 
-m2x_response m2x_device_groups(m2x_context *ctx)
+m2x_response m2x_device_tags(m2x_context *ctx)
 {
   int status;
   char *out = NULL;
 
-  status = m2x_client_get(ctx, "/devices/groups", &out);
+  status = m2x_client_get(ctx, "/devices/tags", &out);
   return m2x_make_response(ctx, status, out);
 }
 

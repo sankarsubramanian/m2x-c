@@ -7,7 +7,7 @@ const char *M2X_KEY = "";
 const char *feed_id = "";
 const char *name = "";
 const char *description = "";
-const char *groups = "";
+const char *tags = "";
 const char *visibility = "";
 
 int main()
@@ -18,8 +18,8 @@ int main()
 
   ctx = m2x_open(M2X_KEY);
 
-  sprintf(buf, "{\"name\": \"%s\", \"description\": \"%s\", \"groups\": \"%s\", \"visibility\": \"%s\"}",
-          name, description, groups, visibility);
+  sprintf(buf, "{\"name\": \"%s\", \"description\": \"%s\", \"tags\": \"%s\", \"visibility\": \"%s\"}",
+          name, description, tags, visibility);
   printf("Update device %s: %s\n", feed_id, buf);
   response = m2x_device_update(ctx, feed_id, buf);
   printf("Status code: %d\n", response.status);
