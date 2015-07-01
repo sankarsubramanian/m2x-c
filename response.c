@@ -13,6 +13,16 @@ m2x_response m2x_make_response(m2x_context *ctx, int status, char *raw)
   return r;
 }
 
+m2x_response m2x_make_response_no_json(m2x_context *ctx, int status, char *raw)
+{
+  m2x_response r;
+  (void) ctx;
+  r.status = status;
+  r.raw = raw;
+  r.json = NULL;
+  return r;
+}
+
 int m2x_is_success(const m2x_response *response)
 {
   return response->status >= 200 && response->status < 300;
