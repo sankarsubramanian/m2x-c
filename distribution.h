@@ -21,13 +21,6 @@ m2x_response m2x_distribution_stream_create(m2x_context *ctx, const char *distri
 m2x_response m2x_distribution_stream_view(m2x_context *ctx, const char *distribution_id, const char *stream_name);
 m2x_response m2x_distribution_stream_delete(m2x_context *ctx, const char *distribution_id, const char *stream_name);
 
-m2x_response m2x_distribution_trigger_list(m2x_context *ctx, const char *distribution_id);
-m2x_response m2x_distribution_trigger_create(m2x_context *ctx, const char *distribution_id, const char *data);
-m2x_response m2x_distribution_trigger_view(m2x_context *ctx, const char *distribution_id, const char *trigger_id);
-m2x_response m2x_distribution_trigger_update(m2x_context *ctx, const char *distribution_id, const char *trigger_id, const char *data);
-m2x_response m2x_distribution_trigger_test(m2x_context *ctx, const char *distribution_id, const char *trigger_id, const char *data);
-m2x_response m2x_distribution_trigger_delete(m2x_context *ctx, const char *distribution_id, const char *trigger_id);
-
 #if defined(__cplusplus)
 }  /* extern "C" { */
 #endif

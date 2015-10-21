@@ -44,18 +44,6 @@ m2x_response m2x_device_stream_delete(m2x_context *ctx, const char *device_id,
 m2x_response m2x_device_post_updates(m2x_context *ctx, const char *device_id,
                                      const char *data);
 
-m2x_response m2x_device_trigger_list(m2x_context *ctx, const char *device_id);
-m2x_response m2x_device_trigger_create(m2x_context *ctx, const char *device_id,
-                                       const char *data);
-m2x_response m2x_device_trigger_view(m2x_context *ctx, const char *device_id,
-                                     const char *trigger_id);
-m2x_response m2x_device_trigger_update(m2x_context *ctx, const char *device_id,
-                                       const char *trigger_id, const char *data);
-m2x_response m2x_device_trigger_test(m2x_context *ctx, const char *device_id,
-                                     const char *trigger_id);
-m2x_response m2x_device_trigger_delete(m2x_context *ctx, const char *device_id,
-                                       const char *trigger_id);
-
 #if defined(__cplusplus)
 }  /* extern "C" { */
 #endif
