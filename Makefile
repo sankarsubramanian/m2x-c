@@ -4,7 +4,7 @@ CFLAGS=-O2 -Wall -Wextra -std=c89
 LDFLAGS=-lcurl
 M2X_LIB=m2x.a
 
-OBJS=device.o distribution.o key.o timestamp.o chart.o response.o client.o serializer.o utility.o m2x.o
+OBJS=device.o distribution.o key.o timestamp.o chart.o response.o client.o serializer.o utility.o m2x.o collection.o
 $(M2X_LIB): $(OBJS) parson.o
 	$(AR) -rcs $@ $^
 
