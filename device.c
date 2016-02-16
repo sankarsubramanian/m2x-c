@@ -266,3 +266,18 @@ m2x_response m2x_device_delete(m2x_context *ctx, const char *device_id)
   m2x_free(path);
   return m2x_make_response(ctx, status, out);
 }
+
+m2x_response m2x_device_search_values(m2x_context *ctx, const char *device_id,
+                                      const char *query)
+{
+  int status;
+  char *base_path, *path, *out = NULL;
+
+  base_path = m2x_internal_create_format_string(ctx, "/devices/%s/values/search.json", device_id);
+  path = m2x_internal_create_query_path(ctx, base_path, query);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  m2x_free(base_path);
+  return m2x_make_response(ctx, status, out);
+}

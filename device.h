@@ -20,6 +20,8 @@ m2x_response m2x_device_delete(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_location(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_location_update(m2x_context *ctx, const char *device_id,
                                         const char *data);
+m2x_response m2x_device_search_values(m2x_context *ctx, const char *device_id,
+                                      const char *query);
 
 m2x_response m2x_device_streams(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_stream_create(m2x_context *ctx, const char *device_id,
