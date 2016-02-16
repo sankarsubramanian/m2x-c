@@ -26,6 +26,18 @@ m2x_response m2x_device_list(m2x_context *ctx, const char *query)
   return m2x_make_response(ctx, status, out);
 }
 
+m2x_response m2x_device_search(m2x_context *ctx, const char *query)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_query_path(ctx, "/devices/search", query);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
 m2x_response m2x_device_tags(m2x_context *ctx)
 {
   int status;
