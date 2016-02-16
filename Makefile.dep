@@ -1,13 +1,20 @@
-chart.o: chart.c client.h m2x.h chart.h response.h \
+chart.o: chart.c client.h m2x.h config.h chart.h response.h \
   third_party/parson/parson.h utility.h
-client.o: client.c m2x.h client.h
-device.o: device.c client.h m2x.h device.h response.h \
+client.o: client.c m2x.h config.h client.h
+collection.o: collection.c client.h m2x.h config.h collection.h \
+  response.h third_party/parson/parson.h utility.h
+device.o: device.c client.h m2x.h config.h device.h response.h \
   third_party/parson/parson.h utility.h
-distribution.o: distribution.c client.h m2x.h distribution.h response.h \
+distribution.o: distribution.c client.h m2x.h config.h distribution.h \
+  response.h third_party/parson/parson.h utility.h
+job.o: job.c client.h m2x.h config.h job.h response.h \
   third_party/parson/parson.h utility.h
-key.o: key.c client.h m2x.h key.h response.h third_party/parson/parson.h \
-  utility.h
-m2x.o: m2x.c m2x.h
-response.o: response.c response.h m2x.h third_party/parson/parson.h
+key.o: key.c client.h m2x.h config.h key.h response.h \
+  third_party/parson/parson.h utility.h
+m2x.o: m2x.c m2x.h config.h
+response.o: response.c response.h m2x.h config.h \
+  third_party/parson/parson.h
 serializer.o: serializer.c serializer.h
-utility.o: utility.c m2x.h utility.h
+timestamp.o: timestamp.c client.h m2x.h config.h timestamp.h response.h \
+  third_party/parson/parson.h
+utility.o: utility.c m2x.h config.h utility.h
