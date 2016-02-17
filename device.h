@@ -49,6 +49,9 @@ m2x_response m2x_device_post_updates(m2x_context *ctx, const char *device_id,
 /*
  * Notice this refers to Post Device Update (Single Values To Multiple Streams)
  * API, which is different from the one above
+ *
+ * For more details, please check this link:
+ * https://m2x.att.com/developer/documentation/v2/device#Post-Device-Update--Single-Values-to-Multiple-Streams-
  */
 m2x_response m2x_device_post_update(m2x_context *ctx, const char *device_id,
                                     const char *data);
