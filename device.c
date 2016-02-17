@@ -439,3 +439,19 @@ m2x_response m2x_device_metadata_field_update(m2x_context *ctx,
   m2x_free(path);
   return m2x_make_response(ctx, status, out);
 }
+
+m2x_response m2x_device_export_values(m2x_context *ctx, const char *device_id,
+                                      const char *query)
+{
+  int status;
+  char *base_path, *path, *out = NULL, *location = NULL;
+
+  base_path = m2x_internal_create_format_string(ctx, "/devices/%s/values/export.csv",
+                                                device_id);
+  path = m2x_internal_create_query_path(ctx, base_path, query);
+
+  status = m2x_client_get_with_location(ctx, path, &out, &location);
+  m2x_free(path);
+  m2x_free(base_path);
+  return m2x_make_response_with_location(ctx, status, out, location);
+}

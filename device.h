@@ -17,6 +17,9 @@ m2x_response m2x_device_update(m2x_context *ctx, const char *device_id,
 m2x_response m2x_device_view(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_view_log(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_delete(m2x_context *ctx, const char *device_id);
+/* Link: https://m2x.att.com/developer/documentation/v2/device#Export-Values-from-all-Data-Streams-of-a-Device */
+m2x_response m2x_device_export_values(m2x_context *ctx, const char *device_id,
+                                      const char *query);
 
 m2x_response m2x_device_location(m2x_context *ctx, const char *device_id);
 m2x_response m2x_device_location_update(m2x_context *ctx, const char *device_id,

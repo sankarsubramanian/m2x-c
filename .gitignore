@@ -24,3 +24,4 @@ examples/list_devices
 examples/update_device
 examples/m2x_status
 examples/serialize_json
+examples/export_values

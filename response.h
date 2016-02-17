@@ -10,6 +10,8 @@ extern "C" {
 
 typedef struct m2x_response {
   int status;
+  /* Optional location from response header */
+  char *location;
   /* Raw response from server */
   char *raw;
   /* Parsed JSON representation */
@@ -17,6 +19,8 @@ typedef struct m2x_response {
 } m2x_response;
 
 m2x_response m2x_make_response(m2x_context *ctx, int status, char *raw);
+m2x_response m2x_make_response_with_location(m2x_context *ctx, int status,
+                                             char *raw, char *location);
 m2x_response m2x_make_response_no_json(m2x_context *ctx, int status, char *raw);
 int m2x_is_success(const m2x_response *response);
 int m2x_is_client_error(const m2x_response *response);

@@ -3,6 +3,7 @@
 m2x_response m2x_make_response(m2x_context *ctx, int status, char *raw)
 {
   m2x_response r;
+  r.location = NULL;
   r.status = status;
   r.raw = raw;
   if (ctx->expand_json && raw) {
@@ -13,10 +14,19 @@ m2x_response m2x_make_response(m2x_context *ctx, int status, char *raw)
   return r;
 }
 
+m2x_response m2x_make_response_with_location(m2x_context *ctx, int status,
+                                             char *raw, char *location)
+{
+  m2x_response r = m2x_make_response(ctx, status, raw);
+  r.location = location;
+  return r;
+}
+
 m2x_response m2x_make_response_no_json(m2x_context *ctx, int status, char *raw)
 {
   m2x_response r;
   (void) ctx;
+  r.location = NULL;
   r.status = status;
   r.raw = raw;
   r.json = NULL;
@@ -46,6 +56,10 @@ int m2x_is_error(const m2x_response *response)
 
 void m2x_release_response(m2x_response *response)
 {
+  if (response->location) {
+    m2x_free(response->location);
+    response->location = NULL;
+  }
   if (response->raw) {
     m2x_free(response->raw);
     response->raw = NULL;
