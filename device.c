@@ -306,3 +306,61 @@ m2x_response m2x_device_post_update(m2x_context *ctx, const char *device_id,
   m2x_free(path);
   return m2x_make_response(ctx, status, out);
 }
+
+m2x_response m2x_device_command_list(m2x_context *ctx, const char *device_id,
+                                     const char *query)
+{
+  int status;
+  char *base_path, *path, *out = NULL;
+
+  base_path = m2x_internal_create_format_string(ctx, "/devices/%s/commands",
+                                                device_id);
+  path = m2x_internal_create_query_path(ctx, base_path, query);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  m2x_free(base_path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_device_command_view(m2x_context *ctx, const char *device_id,
+                                     const char *command_id)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/devices/%s/commands/%s",
+                                           device_id, command_id);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_device_command_process(m2x_context *ctx, const char *device_id,
+                                        const char *command_id, const char *data)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/devices/%s/commands/%s/process",
+                                           device_id, command_id);
+
+  status = m2x_client_post(ctx, path, data, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_device_command_reject(m2x_context *ctx, const char *device_id,
+                                       const char *command_id, const char *data)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/devices/%s/commands/%s/reject",
+                                           device_id, command_id);
+
+  status = m2x_client_post(ctx, path, data, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}

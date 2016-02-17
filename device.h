@@ -56,6 +56,20 @@ m2x_response m2x_device_post_updates(m2x_context *ctx, const char *device_id,
 m2x_response m2x_device_post_update(m2x_context *ctx, const char *device_id,
                                     const char *data);
 
+/* Link: https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands */
+m2x_response m2x_device_command_list(m2x_context *ctx, const char *device_id,
+                                     const char *query);
+/* Link: https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details */
+m2x_response m2x_device_command_view(m2x_context *ctx, const char *device_id,
+                                     const char *command_id);
+/* Link: https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed */
+m2x_response m2x_device_command_process(m2x_context *ctx, const char *device_id,
+                                        const char *command_id, const char *data);
+/* Link: https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected */
+m2x_response m2x_device_command_reject(m2x_context *ctx, const char *device_id,
+                                       const char *command_id, const char *data);
+
+
 #if defined(__cplusplus)
 }  /* extern "C" { */
 #endif
