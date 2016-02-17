@@ -128,3 +128,62 @@ m2x_response m2x_distribution_stream_delete(m2x_context *ctx, const char *distri
   m2x_free(path);
   return m2x_make_response(ctx, status, out);
 }
+
+m2x_response m2x_distribution_metadata(m2x_context *ctx, const char *distribution_id)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/distributions/%s/metadata",
+                                           distribution_id);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_distribution_metadata_update(m2x_context *ctx,
+                                              const char *distribution_id,
+                                              const char *data)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/distributions/%s/metadata",
+                                           distribution_id);
+
+  status = m2x_client_put(ctx, path, data, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_distribution_metadata_field(m2x_context *ctx,
+                                             const char *distribution_id,
+                                             const char *field)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/distributions/%s/metadata/%s",
+                                           distribution_id, field);
+
+  status = m2x_client_get(ctx, path, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_distribution_metadata_field_update(m2x_context *ctx,
+                                                    const char *distribution_id,
+                                                    const char *field,
+                                                    const char *data)
+{
+  int status;
+  char *path, *out = NULL;
+
+  path = m2x_internal_create_format_string(ctx, "/distributions/%s/metadata/%s",
+                                           distribution_id, field);
+
+  status = m2x_client_put(ctx, path, data, &out);
+  m2x_free(path);
+  return m2x_make_response(ctx, status, out);
+}

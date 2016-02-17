@@ -72,6 +72,21 @@ m2x_response m2x_device_command_process(m2x_context *ctx, const char *device_id,
 m2x_response m2x_device_command_reject(m2x_context *ctx, const char *device_id,
                                        const char *command_id, const char *data);
 
+/* Link: https://m2x.att.com/developer/documentation/v2/device#Read-Device-Metadata */
+m2x_response m2x_device_metadata(m2x_context *ctx, const char *device_id);
+/* Link: https://m2x.att.com/developer/documentation/v2/device#Update-Device-Metadata */
+m2x_response m2x_device_metadata_update(m2x_context *ctx,
+                                        const char *device_id,
+                                        const char *data);
+/* Link: https://m2x.att.com/developer/documentation/v2/device#Read-Device-Metadata-Field */
+m2x_response m2x_device_metadata_field(m2x_context *ctx,
+                                       const char *device_id,
+                                       const char *field);
+/* Link: https://m2x.att.com/developer/documentation/v2/device#Update-Device-Metadata-Field */
+m2x_response m2x_device_metadata_field_update(m2x_context *ctx,
+                                              const char *device_id,
+                                              const char *field,
+                                              const char *data);
 
 #if defined(__cplusplus)
 }  /* extern "C" { */
