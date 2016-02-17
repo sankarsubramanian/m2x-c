@@ -46,6 +46,12 @@ m2x_response m2x_device_stream_delete(m2x_context *ctx, const char *device_id,
                                       const char *stream_name);
 m2x_response m2x_device_post_updates(m2x_context *ctx, const char *device_id,
                                      const char *data);
+/*
+ * Notice this refers to Post Device Update (Single Values To Multiple Streams)
+ * API, which is different from the one above
+ */
+m2x_response m2x_device_post_update(m2x_context *ctx, const char *device_id,
+                                    const char *data);
 
 #if defined(__cplusplus)
 }  /* extern "C" { */
