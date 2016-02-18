@@ -170,6 +170,7 @@ int m2x_client_get_with_location(m2x_context *ctx, const char *path,
   } else {
     m2x_free(header_ctx->p);
   }
+  release_header_context(header_ctx, 0);
   release_write_context(write_ctx, 0);
   return (int) code;
 }
