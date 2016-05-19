@@ -12,6 +12,10 @@ m2x_response m2x_collection_create(m2x_context *ctx, const char *data);
 m2x_response m2x_collection_view(m2x_context *ctx, const char *collection_id);
 m2x_response m2x_collection_update(m2x_context *ctx, const char *collection_id,
                                    const char *data);
+m2x_response m2x_collection_add_device(m2x_context *ctx, const char *collection_id,
+                                     const char *device_id, const char *data);
+m2x_response m2x_collection_remove_device(m2x_context *ctx, const char *collection_id,
+                                    const char *device_id, const char *data);
 m2x_response m2x_collection_delete(m2x_context *ctx, const char *collection_id);
 
 m2x_response m2x_collection_metadata(m2x_context *ctx, const char *collection_id);

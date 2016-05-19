@@ -48,6 +48,34 @@ m2x_response m2x_collection_update(m2x_context *ctx, const char *collection_id,
   return m2x_make_response(ctx, status, out);
 }
 
+m2x_response m2x_collection_add_device(m2x_context *ctx, const char *collection_id,
+                                     const char *device_id, const char *data)
+{
+    int status;
+    char *path, *out = NULL;
+    
+    path = m2x_internal_create_format_string(ctx, "/collections/%s/devices/%s", 
+                                            collection_id, device_id);
+    
+    status = m2x_client_put(ctx, path, data, &out);
+    m2x_free(path);
+    return m2x_make_response(ctx, status, out);
+}
+
+m2x_response m2x_collection_remove_device(m2x_context *ctx, const char *collection_id,
+                                     const char *device_id, const char *data)
+{
+    int status;
+    char *path, *out = NULL;
+    
+    path = m2x_internal_create_format_string(ctx, "/collections/%s/devices/%s", 
+                                            collection_id, device_id);
+    
+    status = m2x_client_delete(ctx, path, data, &out);
+    m2x_free(path);
+    return m2x_make_response(ctx, status, out);
+}
+
 m2x_response m2x_collection_device_list(m2x_context *ctx,
                                         const char *collection_id,
                                         const char *query)
