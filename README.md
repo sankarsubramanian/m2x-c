@@ -21,17 +21,34 @@ Setup
 
 The library is written in [C89](http://en.wikipedia.org/wiki/ANSI_C) standard. So you can use most C compilers, including gcc and clang, to compile the source code. The only external dependency is [libcurl](http://curl.haxx.se/libcurl/) (please refer to the documentation for your OS for instructions on how to install libcurl). In fact, most Linux distributions come with libcurl support natively.
 
-To build the m2x-c library and the examples, follow the next steps:
+To build the m2x-c library, follow the next steps:
 
 ```
 $ git clone https://github.com/attm2x/m2x-c.git
 $ cd m2x-c
 $ git submodule update --init
 $ make
-$ make examples
 ```
 
-If no errors occur, the M2X library will be in the `m2x-c/m2x.a` file and the examples will be in `m2x-c/examples/` folder. Feel free to link and use the m2x library in your own executables.
+If no errors occur, the M2X library will be in the `m2x-c/m2x.a` file. Feel free to link and use the m2x library in your own executables.
+
+Examples
+=====
+
+After setting up the M2X client, to run one of our [examples](/examples) proceed with the following steps:
+
+1. Once you've selected an example to run, open the file and add your user specific information such as your `API Key`, `Device ID`, etc.
+2. Build the examples with the following command:
+    
+    ```
+    $ make examples
+    ```
+
+3. To run an example, execute the following command from within the `m2x-c/examples` directory:
+    
+    ```
+    $ ./example_filename
+    ```
 
 API
 ===
