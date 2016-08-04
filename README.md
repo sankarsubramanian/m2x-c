@@ -38,7 +38,7 @@ Examples
 After setting up the M2X client, to run one of our [examples](/examples) proceed with the following steps:
 
 1. Once you've selected an example to run, open the file and add your user specific information such as your `API Key`, `Device ID`, etc.
-2. Build the examples with the following command:
+2. Build the examples by running the following command in the root directory of the m2x-c client library:
     
     ```
     $ make examples
