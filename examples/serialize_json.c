@@ -58,4 +58,5 @@ int main()
 
   printf("JSON String: %s", json_str);
   free(json_str);
+  return 0;
 }
