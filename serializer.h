@@ -1,3 +1,6 @@
+/** @file serializer.h
+ */
+
 #ifndef M2X_SERIALIZER_H
 #define M2X_SERIALIZER_H
 
