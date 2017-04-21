@@ -22,8 +22,12 @@ dep:
 examples:
 	cd examples; make
 
+docs:
+	doxygen ./docs/Doxyfile
+
 clean:
 	cd examples; make clean
 	rm -rf $(M2X_LIB) *.o
+	rm -rfv ./docs/html
 
-.PHONY: clean examples dep
+.PHONY: clean examples dep docs

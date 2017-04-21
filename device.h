@@ -107,7 +107,7 @@ m2x_response m2x_device_delete_location_history(m2x_context *ctx, const char *de
 /** @brief Method for <a href="https://m2x.att.com/developer/documentation/v2/device#Search-Values-from-all-Data-Streams-of-a-Device">Search Values from all Data Streams of a Device</a> endpoint
  * @param ctx - m2x_context structure
  * @param device_id (str) - ID of the Device to search values
- * @param data - Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters
+ * @param query - Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters
  * @return m2x_response - The API response, see M2X API docs for details
  */
 m2x_response m2x_device_search_values(m2x_context *ctx, const char *device_id,
